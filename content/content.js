@@ -151,4 +151,8 @@ async function loading() {
   }
 }
 //start
-loading();
+const url = window.location.href;
+if (url.includes("lms.ictu.edu.vn")) {
+  // console.log("lms");
+  loading();
+}
