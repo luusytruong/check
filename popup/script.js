@@ -46,6 +46,9 @@ function saveToStorage(data) {
 function notify(state, content) {
   notifyElem.className = state;
   notifyElem.innerText = content;
+  setTimeout(() => {
+    notifyElem.innerText = "";
+  }, 1000);
 }
 
 //listener event

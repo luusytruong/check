@@ -114,7 +114,7 @@ button {
 .background {
     position: absolute;
     inset: 0;
-    background-color: var(--bgr-color-2);
+    background-color: var(--body-color);
     z-index: 1;
 }
 
@@ -193,9 +193,9 @@ button:hover {
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --body-color: #21222C;
+        --body-color: #282A36;
         --text-color: #CCC;
-        --bgr-color: #282A36;
-        --bgr-color-2: #343746;
+        --bgr-color: #343746;
+        --bgr-color-2: #3C3D51;
     }
 }
