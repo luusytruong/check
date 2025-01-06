@@ -41,7 +41,6 @@ function interval() {
       const a = document.querySelector(".m-header a");
       if (a) {
         // console.log("%c🟢 logo exist", styleS);
-        //call
         const btnClass = document.querySelector(
           ".nav >:nth-child(2) >:nth-child(3) a"
         );
@@ -95,6 +94,8 @@ function interval() {
   }
   //call
   checkHeaderA();
+  //call
+  checkNav();
 }
 
 //remove disabled
@@ -118,10 +119,8 @@ function addEventBtnNext() {
   if (btnNext) {
     // console.log("tim duoc nut next");
     btnNext.addEventListener("click", () => {
-      setTimeout(() => {
-        btnNext.classList.remove("ictu-button--disabled");
-        btnNext.disabled = false;
-      }, 300);
+      btnNext.classList.remove("ictu-button--disabled");
+      btnNext.disabled = false;
     });
   }
 }
