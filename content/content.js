@@ -119,8 +119,10 @@ function addEventBtnNext() {
   if (btnNext) {
     // console.log("tim duoc nut next");
     btnNext.addEventListener("click", () => {
-      btnNext.classList.remove("ictu-button--disabled");
-      btnNext.disabled = false;
+      setTimeout(() => {
+        btnNext.classList.remove("ictu-button--disabled");
+        btnNext.disabled = false;
+      }, 300);
     });
   }
 }
