@@ -1,35 +1,36 @@
-let objCheck = null;
-const toggle = document.getElementById("toggle-state");
+let settings = null;
+const changeElems = document.querySelectorAll(".change");
+const toggleField = document.getElementById("toggle-state");
+const enterTestField = document.getElementById("enter-test-state");
 const subjectElem = document.getElementById("subject");
 const testElem = document.getElementById("test");
 const notifyElem = document.getElementById("notify");
-const btnSave = document.getElementById("save");
 
 //get data from storage
-function getFromStorage() {
+function getFromStorage(key) {
   try {
     return new Promise((resolve, reject) => {
-      chrome.storage.sync.get(["check"], function (result) {
+      chrome.storage.local.get([key], function (result) {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         } else {
-          resolve(result.check);
+          resolve(result[key]);
         }
       });
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
 //save data to storage
-function saveToStorage(data) {
+function saveToStorage(key, data) {
   if (!chrome || !chrome.storage) {
     return false;
   }
   try {
     return new Promise((resolve, reject) => {
-      chrome.storage.sync.set({ check: data }, function () {
+      chrome.storage.local.set({ [key]: data }, function () {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         } else {
@@ -38,7 +39,7 @@ function saveToStorage(data) {
       });
     });
   } catch (e) {
-    alert(e);
+    console.error(e);
   }
 }
 
@@ -51,30 +52,48 @@ function notify(state, content) {
   }, 1000);
 }
 
-//listener event
-btnSave.addEventListener("click", () => {
-  const checkObj = {
-    state: toggle.checked,
-    subject: parseInt(subjectElem.value),
-    test: parseInt(testElem.value),
-  };
-  if (saveToStorage(checkObj)) {
-    notify("successful", "Save data successful");
-  } else {
-    notify("error", "Save data error");
-  }
-});
+// //listener event
+// btnSave.addEventListener("click", () => {
+//   const checkObj = {
+//     state: toggleField.checked,
+//     subject: parseInt(subjectElem.value),
+//     test: parseInt(testElem.value),
+//   };
+//   if (saveToStorage(checkObj)) {
+//     notify("successful", "Save data successful");
+//   } else {
+//     notify("error", "Save data error");
+//   }
+// });
 
 //load data
 async function loading() {
   if (chrome && chrome.storage) {
-    objCheck = await getFromStorage();
-    if (objCheck) {
-      toggle.checked = objCheck.state;
-      subjectElem.value = objCheck.subject || 1;
-      testElem.value = objCheck.test || 1;
+    settings = await getFromStorage("settings");
+    if (settings) {
+      toggleField.checked = settings.toggle;
+      enterTestField.checked = settings.enter;
+      subjectElem.value = settings.subject || 1;
+      testElem.value = settings.test || 1;
     }
   }
 }
 //start
 loading();
+// chrome.storage.local.get(null, function (data) {
+//   console.log(data);
+// });
+// chrome.storage.local.clear(function () {
+//   console.log("Tất cả dữ liệu đã được xóa khỏi chrome.storage.sync");
+// });
+changeElems.forEach((elem) => {
+  elem.addEventListener("change", () => {
+    const settings = {
+      toggle: toggleField.checked,
+      enter: enterTestField.checked,
+      subject: parseInt(subjectElem.value),
+      test: parseInt(testElem.value),
+    };
+    if (!saveToStorage("settings", settings)) alert("error save data error");
+  });
+});

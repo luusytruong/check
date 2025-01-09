@@ -1,3 +1,4 @@
+let settings;
 let nav = null;
 const styleW = `
   color: #FCD53F; 
@@ -17,8 +18,6 @@ const styleE = `
   padding: 4px 12px 4px 4px; 
   border-radius: 50px;
 `;
-let subjectIndex = 0;
-let testIndex = 0;
 
 //func interval
 function interval() {
@@ -28,16 +27,16 @@ function interval() {
       nav = document.querySelector(".ictu-page-test__test-panel__single-nav");
       // console.log("check");
       if (nav) {
+        clearInterval(intervalId);
         // console.log("tim duoc nav");
         removeDisabled();
-        clearInterval(intervalId);
       }
     }, interval);
   }
   //check header a
   function checkHeaderA() {
     // console.log("%c🟡 wait check logo ...", styleW);
-    const intervalId = setInterval(() => {
+    let intervalId = setInterval(() => {
       const a = document.querySelector(".m-header a");
       if (a) {
         // console.log("%c🟢 logo exist", styleS);
@@ -47,38 +46,57 @@ function interval() {
         if (btnClass) {
           clearInterval(intervalId);
           btnClass.click();
-          const intervalId2 = setInterval(() => {
+          intervalId = setInterval(() => {
             // console.log("%c🟡 check subject ...", styleW);
             const btnSubject = document.querySelector(
-              `.classes-container >:nth-child(${subjectIndex}) a`
+              `.classes-container >:nth-child(${settings.subject}) a`
             );
             if (btnSubject) {
+              clearInterval(intervalId);
               // console.log("%c🟢 subject exist", styleS);
               btnSubject.click();
-              clearInterval(intervalId2);
-              const intervalId3 = setInterval(() => {
+              intervalId = setInterval(() => {
                 // console.log("%c🟡 check test ...", styleW);
                 const btnTest = document.querySelector(
-                  `.activity-left >:nth-child(${testIndex}) >div`
+                  `.activity-left >:nth-child(${settings.test + 1}) >div`
                 );
                 if (btnTest) {
+                  clearInterval(intervalId);
                   // console.log("%c🟢 test exist", styleS);
                   btnTest.click();
-                  clearInterval(intervalId3);
                   let find = 10;
-                  const intervalId4 = setInterval(() => {
+                  intervalId = setInterval(() => {
                     // console.log("%c🟡 check, can i do it ...", styleW);
                     const btnTestView = document.querySelector(
-                      `.activity-left >:nth-child(${testIndex}) >ul>li:nth-child(3) >div`
+                      `.activity-left >:nth-child(${
+                        settings.test + 1
+                      }) >ul>li:nth-child(3) >div`
                     );
                     if (btnTestView) {
+                      clearInterval(intervalId);
                       // console.log("%c🟢 let's do it", styleS);
                       btnTestView.click();
-                      clearInterval(intervalId4);
+                      if (settings.enter) {
+                        intervalId = setInterval(() => {
+                          const btnTestDo =
+                            document.querySelector(".theme-button");
+                          if (btnTestDo) {
+                            clearInterval(intervalId);
+                            btnTestDo.click();
+                            intervalId = setInterval(() => {
+                              const accept = document.querySelector("label");
+                              if (accept) {
+                                clearInterval(intervalId);
+                                accept.click();
+                              }
+                            }, interval);
+                          }
+                        }, interval);
+                      }
                     } else {
                       if (find === 0) {
-                        // console.log("%c🔴 can not do", styleE);
                         clearInterval(intervalId4);
+                        // console.log("%c🔴 can not do", styleE);
                         return;
                       }
                       find--;
@@ -128,13 +146,13 @@ function addEventBtnNext() {
 }
 
 //get data from storage
-function getFromStorage() {
+function getFromStorage(key) {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(["check"], function (result) {
+    chrome.storage.local.get([key], function (result) {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
       } else {
-        resolve(result.check);
+        resolve(result[key]);
       }
     });
   });
@@ -142,11 +160,10 @@ function getFromStorage() {
 
 //load data
 async function loading() {
-  const checkObj = await getFromStorage();
-  if (checkObj && checkObj.state === true) {
+  settings = await getFromStorage("settings");
+  console.log(settings);
+  if (settings && settings.toggle === true) {
     // console.log("%c🟢 extension on", styleS);
-    subjectIndex = checkObj.subject;
-    testIndex = checkObj.test + 1;
     interval();
   }
 }
