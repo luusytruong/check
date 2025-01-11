@@ -2,9 +2,9 @@ let settings = null;
 const changeElems = document.querySelectorAll(".change");
 const toggleField = document.getElementById("toggle-state");
 const enterTestField = document.getElementById("enter-test-state");
+const submitTestField = document.getElementById("submit-test-state");
 const subjectElem = document.getElementById("subject");
 const testElem = document.getElementById("test");
-const notifyElem = document.getElementById("notify");
 
 //get data from storage
 function getFromStorage(key) {
@@ -43,29 +43,6 @@ function saveToStorage(key, data) {
   }
 }
 
-//notify
-function notify(state, content) {
-  notifyElem.className = state;
-  notifyElem.innerText = content;
-  setTimeout(() => {
-    notifyElem.innerText = "";
-  }, 1000);
-}
-
-// //listener event
-// btnSave.addEventListener("click", () => {
-//   const checkObj = {
-//     state: toggleField.checked,
-//     subject: parseInt(subjectElem.value),
-//     test: parseInt(testElem.value),
-//   };
-//   if (saveToStorage(checkObj)) {
-//     notify("successful", "Save data successful");
-//   } else {
-//     notify("error", "Save data error");
-//   }
-// });
-
 //load data
 async function loading() {
   if (chrome && chrome.storage) {
@@ -73,6 +50,7 @@ async function loading() {
     if (settings) {
       toggleField.checked = settings.toggle;
       enterTestField.checked = settings.enter;
+      submitTestField.checked = settings.submit;
       subjectElem.value = settings.subject || 1;
       testElem.value = settings.test || 1;
     }
@@ -80,9 +58,9 @@ async function loading() {
 }
 //start
 loading();
-// chrome.storage.local.get(null, function (data) {
-//   console.log(data);
-// });
+chrome.storage.local.get(null, function (data) {
+  console.log(data);
+});
 // chrome.storage.local.clear(function () {
 //   console.log("Tất cả dữ liệu đã được xóa khỏi chrome.storage.sync");
 // });
@@ -91,6 +69,7 @@ changeElems.forEach((elem) => {
     const settings = {
       toggle: toggleField.checked,
       enter: enterTestField.checked,
+      submit: submitTestField.checked,
       subject: parseInt(subjectElem.value),
       test: parseInt(testElem.value),
     };

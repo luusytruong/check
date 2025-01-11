@@ -112,8 +112,7 @@ function interval() {
   }
   //call
   checkHeaderA();
-  //call
-  checkNav();
+  if (settings.submit) checkNav();
 }
 
 //remove disabled
