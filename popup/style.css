@@ -20,7 +20,7 @@
     --body-color: #F3F5F6;
     --text-color: #333;
     --bgr-color: #FFF;
-    --bgr-color-2: #EEE;
+    --bgr-color-2: #DDD;
 }
 
 ::selection {
@@ -63,18 +63,27 @@ button {
     background-color: var(--bgr-color);
     border-radius: 12px;
     /* padding: 12px; */
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .wrapper>* {
     padding: 12px;
 }
 
-.wrapper>*:hover {
-    background-color: #7A6BFF0d;
+#toggle {
+    border-radius: 12px 12px 0 0;
+}
 
-    select {
-        background-color: #7A6BFF0d;
+.wrapper-select:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
+label:hover,
+.wrapper-select:hover {
+    background-color: #7A6BFF20;
+
+    .background {
+        background-color: var(--bgr-color-2);
     }
 
     img {
@@ -123,7 +132,7 @@ input:checked+.round {
 }
 
 input:checked+span+.background {
-    background-color: #7A6BFF;
+    background-color: #7A6BFF !important;
 }
 
 input {
@@ -178,24 +187,11 @@ img {
     color: #00BB00;
 }
 
-button {
-    background-color: var(--bgr-color);
-    border: 0;
-    color: #7A6BFF;
-    font-weight: 600;
-    padding: 12px;
-    border-radius: 12px;
-}
-
-button:hover {
-    background-color: var(--bgr-color-2);
-}
-
 @media (prefers-color-scheme: dark) {
     :root {
         --body-color: #282A36;
         --text-color: #CCC;
         --bgr-color: #343746;
-        --bgr-color-2: #3C3D51;
+        --bgr-color-2: #282A36;
     }
 }
