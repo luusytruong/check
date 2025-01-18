@@ -160,7 +160,7 @@ function getFromStorage(key) {
 //load data
 async function loading() {
   settings = await getFromStorage("settings");
-  console.log(settings);
+  // console.log(settings);
   if (settings && settings.toggle === true) {
     // console.log("%c🟢 extension on", styleS);
     interval();
